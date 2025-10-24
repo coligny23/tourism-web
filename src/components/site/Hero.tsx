@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 export default function Hero() {
   return (
     <section className="relative overflow-hidden">
-      {/* Background image with fixed dimensions to avoid CLS */}
       <div className="relative mx-auto aspect-16/7 w-full max-w-6xl">
         <Image
-          src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2400&auto=format&fit=crop"
-          alt="Safari landscape in Serengeti"
+          src="/images/hero-zebras.jpg"
+          alt="Zebras crossing the savannah"
           fill
           priority
-          sizes="(max-width: 768px) 100vw, 1200px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1200px) 90vw, 1200px"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/30" />
