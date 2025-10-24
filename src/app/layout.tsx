@@ -1,7 +1,10 @@
+import Header from "@/components/site/Header";
+import Footer from "@/components/site/Footer";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import ConsentBanner from "@/components/site/ConsentBanner";
+
 
 export const metadata: Metadata = {
   title: {
@@ -15,7 +18,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-white text-neutral-900 antialiased">{children} <ConsentBanner /> <Analytics/></body>
+      <body className="min-h-screen bg-white text-neutral-900 antialiased">
+        <Header />
+        <main id="main">{children}</main>
+        <Footer />
+        <ConsentBanner/>
+        <Analytics />
+      </body>
     </html>
   );
 }
