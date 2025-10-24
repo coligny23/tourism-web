@@ -1,22 +1,47 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+
+
+const HeroText = dynamic(() => import("./HeroText"), {
+  ssr: false,
+  loading: () => (
+    <div className="max-w-xl rounded-2xl bg-white/70 p-5 text-neutral-600">
+      Loading…
+    </div>
+  ),
+});
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="relative mx-auto aspect-16/7 w-full max-w-6xl">
+    <section className="relative w-full">
+      {/* Full-bleed image with fixed height to avoid CLS */}
+      <div className="relative h-[52vh] min-h-[380px] w-full md:h-[60vh] lg:h-[72vh]">
         <Image
-          src="/images/hero-zebras.jpg"
+          src="/images/hero-zebras.jpg" // your local file
           alt="Zebras crossing the savannah"
           fill
           priority
-          sizes="(max-width: 640px) 100vw, (max-width: 1200px) 90vw, 1200px"
+          sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute inset-0 flex items-end p-6 md:items-center md:p-10">
-          <div className="max-w-xl rounded-2xl bg-white/85 p-5 backdrop-blur">
+        {/* Subtle gradient for text legibility */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/20 to-transparent" />
+      </div>
+
+      {/* Content box, aligned to the image bottom, centered horizontally */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 pb-6 md:pb-10">
+        <div className="container pointer-events-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
+            className="max-w-xl rounded-2xl bg-white/85 p-5 backdrop-blur"
+          >
             <h1 className="text-2xl font-semibold md:text-4xl">
               Tanzania Safaris & Kilimanjaro Specialists
             </h1>
@@ -27,8 +52,8 @@ export default function Hero() {
               <Link href="/plan-my-trip"><Button>Plan My Trip</Button></Link>
               <Link href="/tours"><Button variant="outline">Browse Tours</Button></Link>
             </div>
-            <p className="mt-2 text-xs text-neutral-500">Award-winning service · 4.9/5 reviews</p>
-          </div>
+            <p className="mt-2 text-xs text-neutral-600">Award-winning service · 4.9/5 reviews</p>
+          </motion.div>
         </div>
       </div>
     </section>
