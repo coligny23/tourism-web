@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import FocusTrap from "@/lib/focus-trap";
+import { NAV } from "@/data/nav";
 
 type MenuKey = "safaris" | "kilimanjaro" | "zanzibar" | null;
 
@@ -59,30 +61,9 @@ export default function Header() {
               Safaris <ChevronDown className="ml-1 inline h-4 w-4" />
             </button>
             <MegaMenu id="menu-safaris" open={open === "safaris"}>
-              <MenuSection
-                title="Popular Parks"
-                links={[
-                  { href: "/tours?park=serengeti", label: "Serengeti" },
-                  { href: "/tours?park=ngorongoro", label: "Ngorongoro" },
-                  { href: "/tours?park=tarangire", label: "Tarangire" },
-                ]}
-              />
-              <MenuSection
-                title="By Style"
-                links={[
-                  { href: "/tours?style=budget", label: "Budget" },
-                  { href: "/tours?style=midrange", label: "Mid-Range" },
-                  { href: "/tours?style=luxury", label: "Luxury" },
-                ]}
-              />
-              <MenuSection
-                title="By Duration"
-                links={[
-                  { href: "/tours?days=3-4", label: "3–4 Days" },
-                  { href: "/tours?days=5-6", label: "5–6 Days" },
-                  { href: "/tours?days=7+", label: "7+ Days" },
-                ]}
-              />
+              <MenuSection title="Popular Parks" links={NAV.safaris.popularParks} />
+              <MenuSection title="By Style" links={NAV.safaris.byStyle} />
+              <MenuSection title="By Duration" links={NAV.safaris.byDuration} />
             </MegaMenu>
           </div>
 
@@ -100,22 +81,8 @@ export default function Header() {
               Kilimanjaro <ChevronDown className="ml-1 inline h-4 w-4" />
             </button>
             <MegaMenu id="menu-kili" open={open === "kilimanjaro"}>
-              <MenuSection
-                title="Routes"
-                links={[
-                  { href: "/kilimanjaro/machame", label: "Machame" },
-                  { href: "/kilimanjaro/lemosho", label: "Lemosho" },
-                  { href: "/kilimanjaro/marangu", label: "Marangu" },
-                ]}
-              />
-              <MenuSection
-                title="Plan"
-                links={[
-                  { href: "/kilimanjaro#packing", label: "Packing List" },
-                  { href: "/kilimanjaro#safety", label: "Safety & Health" },
-                  { href: "/kilimanjaro#season", label: "Best Season" },
-                ]}
-              />
+              <MenuSection title="Routes" links={NAV.kilimanjaro.routes} />
+              <MenuSection title="Plan" links={NAV.kilimanjaro.plan} />
             </MegaMenu>
           </div>
 
@@ -133,22 +100,8 @@ export default function Header() {
               Zanzibar <ChevronDown className="ml-1 inline h-4 w-4" />
             </button>
             <MegaMenu id="menu-zanzibar" open={open === "zanzibar"}>
-              <MenuSection
-                title="Plan"
-                links={[
-                  { href: "/zanzibar#when-to-go", label: "When to Go" },
-                  { href: "/zanzibar#where-to-stay", label: "Where to Stay" },
-                  { href: "/zanzibar#packages", label: "Packages" },
-                ]}
-              />
-              <MenuSection
-                title="Islands"
-                links={[
-                  { href: "/zanzibar#nungwi", label: "Nungwi" },
-                  { href: "/zanzibar#paje", label: "Paje" },
-                  { href: "/zanzibar#stone-town", label: "Stone Town" },
-                ]}
-              />
+              <MenuSection title="Plan" links={NAV.zanzibar.plan} />
+              <MenuSection title="Islands" links={NAV.zanzibar.islands} />
             </MegaMenu>
           </div>
 
@@ -176,21 +129,10 @@ export default function Header() {
       {/* Mobile panel */}
       {mobileOpen && (
         <div className="border-t border-neutral-200 bg-white md:hidden">
-          <div className="mx-auto max-w-6xl px-4 py-4 space-y-3">
-            <MobileGroup title="Safaris" links={[
-              { href: "/tours?park=serengeti", label: "Serengeti" },
-              { href: "/tours?park=ngorongoro", label: "Ngorongoro" },
-              { href: "/tours", label: "All Safaris" },
-            ]}/>
-            <MobileGroup title="Kilimanjaro" links={[
-              { href: "/kilimanjaro/machame", label: "Machame" },
-              { href: "/kilimanjaro/lemosho", label: "Lemosho" },
-              { href: "/kilimanjaro", label: "All Routes" },
-            ]}/>
-            <MobileGroup title="Zanzibar" links={[
-              { href: "/zanzibar#when-to-go", label: "When to Go" },
-              { href: "/zanzibar#where-to-stay", label: "Where to Stay" }
-            ]}/>
+          <div className="mx-auto max-w-6xl space-y-3 px-4 py-4">
+            <MobileGroup title="Safaris" links={[...NAV.safaris.popularParks, { href: "/tours", label: "All Safaris" }]} />
+            <MobileGroup title="Kilimanjaro" links={[...NAV.kilimanjaro.routes, { href: "/kilimanjaro", label: "All Routes" }]} />
+            <MobileGroup title="Zanzibar" links={NAV.zanzibar.plan} />
             <Link className="block rounded-lg px-3 py-2 text-sm hover:bg-neutral-100" href="/blog">Blog</Link>
             <Link className="block rounded-lg px-3 py-2 text-sm hover:bg-neutral-100" href="/about">About</Link>
             <Link className="block rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white" href="/plan-my-trip">Plan My Trip</Link>
@@ -221,7 +163,7 @@ function MegaMenu({
         !open && "hidden"
       )}
     >
-      {children}
+      <FocusTrap active={open}>{children}</FocusTrap>
     </div>
   );
 }
@@ -231,7 +173,7 @@ function MenuSection({
   links,
 }: {
   title: string;
-  links: { href: string; label: string }[];
+  links: ReadonlyArray<{ href: string; label: string }>;
 }) {
   return (
     <div>
@@ -254,7 +196,7 @@ function MobileGroup({
   links,
 }: {
   title: string;
-  links: { href: string; label: string }[];
+  links: ReadonlyArray<{ href: string; label: string }>;
 }) {
   return (
     <div>
