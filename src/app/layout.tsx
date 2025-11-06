@@ -1,19 +1,15 @@
 import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
-import type { Metadata } from "next";
+
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import ConsentBanner from "@/components/site/ConsentBanner";
 
+import { getDefaultMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: {
-    default: " Echelon Safaris Co",
-    template: "%s | Echelon Safaris Co"
-  },
-  description: "Premium Tanzania safaris, Kilimanjaro climbs, and Zanzibar getaways.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-};
+
+
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,4 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </body>
     </html>
   );
+}
+
+
+export async function generateMetadata() {
+  return await getDefaultMeta();
 }

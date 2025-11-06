@@ -1,3 +1,4 @@
+import { groq } from "next-sanity";
 import { sanityClient } from "./sanity.client";
 import { TOURS_CARD_QUERY, PARKS_QUERY, ROUTES_QUERY } from "./queries";
 import { z } from "zod";
@@ -48,4 +49,21 @@ export async function getParks() {
 export async function getRoutes() {
   const data = await sanityClient.fetch(ROUTES_QUERY, {}, { next: { revalidate: 300, tags: ["routes"] } });
   return z.array(RouteCard).parse(data);
+}
+
+export async function getTourBySlug(slug: string) {
+  if (!slug) return null;
+  const query = groq`*[_type=="tour" && slug.current==$slug][0]{
+    _id, title, summary, image, "imageUrl": image.asset->url, slug
+  }`;
+  return sanityClient.fetch(query, { slug }, { next: { revalidate: 300, tags: ["tours"] } });
+}
+
+// 📝 Fetch blog post by slug
+export async function getPostBySlug(slug: string) {
+  if (!slug) return null;
+  const query = groq`*[_type=="blogPost" && slug.current==$slug][0]{
+    _id, title, excerpt, coverImage, slug
+  }`;
+  return sanityClient.fetch(query, { slug }, { next: { revalidate: 300, tags: ["blog"] } });
 }

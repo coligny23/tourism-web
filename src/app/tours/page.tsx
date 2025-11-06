@@ -1,12 +1,26 @@
+import { getDefaultMeta } from "@/lib/seo";
+
+export async function generateMetadata() {
+  const defaults = await getDefaultMeta();
+  return {
+    ...defaults,
+    title: `Safaris | ${defaults.title}`,
+    description:
+      "Browse Tanzania safari packages across Serengeti, Ngorongoro, and Tarangire. Hand-crafted itineraries with trusted local guides.",
+    openGraph: {
+      ...defaults.openGraph,
+      title: `Safaris | ${defaults.title}`,
+    },
+  };
+}
+
+
 import Image from "next/image";
 import Link from "next/link";
 import { getTours } from "@/lib/cms";
 import { urlFor } from "@/lib/sanity.image";
 
-export const metadata = {
-  title: "Safaris",
-  description: "Browse our most popular Tanzania safaris.",
-};
+
 
 export default async function ToursPage() {
   const tours = await getTours();
