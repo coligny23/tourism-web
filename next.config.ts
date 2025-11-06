@@ -5,8 +5,11 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/photo-*" },
-      { protocol: "https", hostname: "source.unsplash.com", pathname: "/*" }
-    ]
+      { protocol: "https", hostname: "source.unsplash.com", pathname: "/*" },
+      { protocol: "https", hostname: "cdn.sanity.io" }
+    ],
+    deviceSizes: [640, 768, 1024, 1280, 1600],
+    imageSizes: [16, 32, 48, 64, 96]
   },
   //,
   async headers() {
