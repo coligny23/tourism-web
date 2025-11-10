@@ -1,4 +1,4 @@
-import { tour } from "./tour";
+import tour  from "./tour";
 import { park } from "./park";
 import { route } from "./route";
 import { stay } from "./stay";
