@@ -84,6 +84,28 @@ export async function getTourBySlug(slug: string) {
   return sanityClient.fetch(query, { slug }, { next: { revalidate: 300, tags: ["tours"] } });
 }
 
+export async function getReviewsByTourSlug(slug: string) {
+  if (!slug) return [];
+
+  const query = groq`*[_type=="review" && defined(tour) && tour->slug.current==$slug]
+    | order(_createdAt desc){
+      _id,
+      name,
+      country,
+      rating,
+      content
+    }`;
+
+  const data = await sanityClient.fetch(
+    query,
+    { slug },
+    { next: { revalidate: 300, tags: ["reviews", `tour:${slug}`] } }
+  );
+
+  return z.array(Review).parse(data);
+}
+
+
 // ✅ Fetch blog post by slug
 export async function getPostBySlug(slug: string) {
   if (!slug) return null;
@@ -92,3 +114,13 @@ export async function getPostBySlug(slug: string) {
   }`;
   return sanityClient.fetch(query, { slug }, { next: { revalidate: 300, tags: ["blog"] } });
 }
+
+export const Review = z.object({
+  _id: z.string(),
+  name: z.string(),
+  country: z.string(),
+  rating: z.number().min(1).max(5),
+  content: z.string(),
+});
+
+export type ReviewT = z.infer<typeof Review>;

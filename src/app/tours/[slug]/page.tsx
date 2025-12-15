@@ -3,6 +3,8 @@ import { urlFor } from "@/lib/sanity.image";
 import { getDefaultMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
+import { getReviewsByTourSlug } from "@/lib/cms";
+
 
 import { sanityClient } from "@/lib/sanity.client";
 import { groq } from "next-sanity";
